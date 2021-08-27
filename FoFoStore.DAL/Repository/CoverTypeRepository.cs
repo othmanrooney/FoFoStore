@@ -11,21 +11,21 @@ using FoFoStore.DAL.Repository;
 
 namespace FoFoStore.DAL.Repository
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class CoverTypeRepository : Repository<CoverType>, ICoverTypeRepositry
     {
         private readonly ApplicationDbContext _db;
-        public CategoryRepository(ApplicationDbContext db):base(db)
+        public CoverTypeRepository(ApplicationDbContext db):base(db)
         {
             _db = db;
         }
 
-        public void Update(Category category)
+        public void Update(CoverType coverType)
         {
-            var objFromDb = _db.categories.FirstOrDefault(s=>s.Id==category.Id);
+            var objFromDb = _db.coverTypes.FirstOrDefault(s=>s.Id== coverType.Id);
            
             if(objFromDb != null)
             {
-                objFromDb.Name = category.Name;
+                objFromDb.Name = coverType.Name;
                 
             }
             

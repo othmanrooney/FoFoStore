@@ -1,21 +1,23 @@
-﻿using FoFoStore.DAL.Repository.IRepository;
+﻿using FoFoStore.Utility;
+using FoFoStore.DAL.Repository.IRepository;
 using FoFoStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 
 namespace FoFoStore.Areas.Admin.Controllers
 {
     //1-add area 
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class CoverTypeController : Controller
     {
         //2-add IUnitOfWork
         private readonly IUnitOfWork _unitOfWork;
         //depency injectiion 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public CoverTypeController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -26,45 +28,50 @@ namespace FoFoStore.Areas.Admin.Controllers
 
         public IActionResult Upsert(int? id)
         {
-            Category category = new Category();
+            CoverType coverType   = new CoverType();
             if (id == null)
             {
                 //thiis is for create
-                return View(category);
+                return View(coverType);
             }
             //this is for edit 
             // using GetValueOrDefault bec id could be nulll
-            category = _unitOfWork.category.Get(id.GetValueOrDefault());
-            if(category==null)
+            var parameter = new DynamicParameters();
+            parameter.Add(@"Id", id);
+            coverType = _unitOfWork.sP_Call.OneRecord<CoverType>(SD.Proc_CoverType_Get, parameter);
+            if (coverType == null)
             {
                 return NotFound();
             }
-            return View(category);
+            return View(coverType);
             
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Category category)
+        public IActionResult Upsert(CoverType coverType)
         {
             if (ModelState.IsValid)
             {
+                var parameter = new DynamicParameters();
+                parameter.Add(@"Name",coverType.Name);
                 //double secuirty with the validation in script in upsert cshtml
 
-                if (category.Id == 0)
+                if (coverType.Id == 0)
                 {
-                    _unitOfWork.category.Add(category);
+                    _unitOfWork.sP_Call.Execute(SD.Proc_CoverType_Create,parameter);
                    
                 }
                 else
                 {
-                    _unitOfWork.category.Update(category);
+                    parameter.Add("@Id", coverType.Id);
+                    _unitOfWork.sP_Call.Execute(SD.Proc_CoverType_Update, parameter);
                 }
                 _unitOfWork.Save();
                 //بتقدر تستخدم  Index مكان 
                 //nameof(Index)بس عشان ما يحصل غلط ةانت بتكتبه اندكس
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(coverType);
         }
 
 
@@ -73,18 +80,20 @@ namespace FoFoStore.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var AllObj = _unitOfWork.category.GetAll();
+            var AllObj = _unitOfWork.sP_Call.List<CoverType>(SD.Proc_CoverType_GetAll,null);
             return Json(new { data =AllObj });
         }
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var objFromDb = _unitOfWork.category.Get(id);
+            var parameter = new DynamicParameters();
+            parameter.Add(@"Id",id);
+            var objFromDb = _unitOfWork.sP_Call.OneRecord<CoverType>(SD.Proc_CoverType_Get,parameter);
             if(objFromDb ==null)
             {
                 return Json(new { success = false,message="Error While deleting" });
             }
-            _unitOfWork.category.Remove(objFromDb);
+            _unitOfWork.sP_Call.Execute(SD.Proc_CoverType_Delete,parameter);
             _unitOfWork.Save();
             return Json(new { success = true, message = "Delete Successfull" });
         }

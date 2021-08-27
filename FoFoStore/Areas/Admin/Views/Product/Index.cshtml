@@ -6,10 +6,10 @@
 <br />
 <div class="row">
     <div class="col-6">
-        <h2 class="text-primary">Category List </h2>
+        <h2 class="text-primary">Product List </h2>
     </div>
     <div class="col-6 text-right">
-        <a class="btn btn-primary" asp-controller="Category" asp-action="Upsert"><i class="fas fa-plus"></i> &nbsp; Create New Category</a>
+        <a class="btn btn-primary" asp-controller="Product" asp-action="Upsert"><i class="fas fa-plus"></i> &nbsp; Create Product</a>
     </div>
 </div>
 
@@ -18,15 +18,18 @@
     <table id="tblData" class="table table-striped border">
         <thead class="thead-dark">
             <tr class="table-info">
+                <th>Title</th>
+                <th>ISBN</th>
+                <th>Price</th>
+                <th>Author</th>
+                <th>Category</th>
                 <th>
-                     Name
                 </th>
-                <th></th>
             </tr>
         </thead>
     </table>
 </div>
 @section Scripts{
 
-<script src="~/js/category.js"></script>
+    <script src="~/js/product.js"></script>
 }

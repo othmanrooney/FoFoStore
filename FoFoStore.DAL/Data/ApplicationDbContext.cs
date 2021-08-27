@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
 namespace FoFoStore.DAL.Data
 {
     public class ApplicationDbContext : IdentityDbContext
@@ -14,5 +13,9 @@ namespace FoFoStore.DAL.Data
         {
         }
         public DbSet<Category> categories { get; set; }
+        public DbSet<CoverType> coverTypes { get; set; }
+        public DbSet<Product> products { get; set; }
+        public DbSet<ApplicationUser> applicationUsers  { get; set; }
+        public DbSet<Company> companies { get; set; }
     }
 }
