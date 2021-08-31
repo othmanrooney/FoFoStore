@@ -2,11 +2,13 @@
 using FoFoStore.DAL.Data;
 using FoFoStore.DAL.Repository;
 using FoFoStore.DAL.Repository.IRepository;
+using FoFoStore.Utility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,12 +37,12 @@ namespace FoFoStore
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddRazorPages();
+            services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<ApplicationDbContext>();//to edit the error with the default idntity
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+            services.AddSingleton<IEmailSender, EmailSender>();
 
         }
 

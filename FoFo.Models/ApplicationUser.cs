@@ -13,6 +13,7 @@ namespace FoFoStore.Models
         public string Name { get; set; }
         public string StreetAddress { get; set; }
         public string State { get; set; }
+        public string City { get; set; }
         public string PostalCode { get; set; }
         public int? CompanyId { get; set; }//not all user will related with company 
         [ForeignKey("CompanyId")]
