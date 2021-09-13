@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoFoStore.Areas.Admin.Controllers
 {
     //1-add area 
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CoverTypeController : Controller
     {
         //2-add IUnitOfWork

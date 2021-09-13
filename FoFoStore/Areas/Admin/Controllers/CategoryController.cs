@@ -1,5 +1,7 @@
 ﻿using FoFoStore.DAL.Repository.IRepository;
 using FoFoStore.Models;
+using FoFoStore.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,7 @@ namespace FoFoStore.Areas.Admin.Controllers
 {
     //1-add area 
     [Area("Admin")]
+    [Authorize(Roles =SD.Role_Admin)]
     public class CategoryController : Controller
     {
         //2-add IUnitOfWork

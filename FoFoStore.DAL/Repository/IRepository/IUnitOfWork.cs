@@ -11,6 +11,9 @@ namespace FoFoStore.DAL.Repository.IRepository
         IProductRepository product { get; }
         ICompanyRepository company { get; }
         IApplicationUserRepository applicationUser { get; }
+        IShoppingCartRepository shoppingCart { get; }
+        IOrderHeaderRepository orderHeader { get; }
+        IOrderDetailsRepository orderDetails { get; }
         ISP_Call sP_Call { get; }
         void Save();
     }

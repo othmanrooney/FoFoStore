@@ -19,12 +19,18 @@ namespace FoFoStore.DAL.Repository
             product = new ProductRepository(_db);
             company = new CompanyRepository(_db);
             applicationUser = new ApplicationUserRepository(_db);
+            orderDetails = new OrderDetailsRepository(_db);
+            orderHeader = new OrderHeaderRepository(_db);
+            shoppingCart = new ShoppingCartRepository(_db);
         }
         public ICategoryRepository category { get; private set; }
         public ICoverTypeRepositry CoverType { get; private set; }
         public IProductRepository product { get;private set; }
         public ICompanyRepository company { get; private set; }
         public IApplicationUserRepository applicationUser { get; private set; }
+        public IShoppingCartRepository shoppingCart { get; private set; }
+        public IOrderHeaderRepository orderHeader { get; private set; }
+        public IOrderDetailsRepository orderDetails { get; private set; }
         public ISP_Call sP_Call { get; private set; }
 
         public void Dispose()

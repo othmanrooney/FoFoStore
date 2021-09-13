@@ -41,9 +41,27 @@ namespace FoFoStore
             services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();//to edit the error with the default idntity
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();//dependecy injection
+            services.Configure<EmailOption>(Configuration);//dependecy injection
             services.AddSingleton<IEmailSender, EmailSender>();
-
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = "586289225713151";//facebook developer basics
+                options.AppSecret = "d2621ac89003a15a336ee8ac5cccfaac";//facebook developer basics
+            });
+            services.AddAuthentication().AddGoogle(
+            options=>
+            {
+                options.ClientId = "85018285064-n1akgb0l7no9r7l6e7ebmacsn985mv40.apps.googleusercontent.com";
+                options.ClientSecret = "k8ltHgZACFLK4i6tRfv_Xdeg";
+            }
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

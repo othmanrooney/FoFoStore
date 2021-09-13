@@ -1,6 +1,8 @@
 ﻿using FoFoStore.DAL.Data;
 using FoFoStore.DAL.Repository.IRepository;
 using FoFoStore.Models;
+using FoFoStore.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,6 +14,7 @@ namespace FoFoStore.Areas.Admin.Controllers
 {   //other way to using applicationdbContext without Repository 
     //1-add area 
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -52,7 +55,29 @@ namespace FoFoStore.Areas.Admin.Controllers
             }
             return Json(new { data = UserList });
         }
-      
+        [HttpPost]
+        public IActionResult LockUnlock([FromBody] string id)
+        {
+            //if it is lock we will lock them , if its unlock we will lock 
+            var objFromDb = _db.applicationUsers.FirstOrDefault(u => u.Id == id);
+            if(objFromDb==null)
+            {
+                return Json(new {success=false , message="Error While Locking/Unlocking" });
+
+            }
+            if(objFromDb.LockoutEnd != null && objFromDb.LockoutEnd > DateTime.Now)
+            {
+                //user currently locked will unlock
+                objFromDb.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                objFromDb.LockoutEnd = DateTime.Now.AddYears(1000);
+            }
+            _db.SaveChanges();
+            return Json(new { success = true, message = "Operation Successful. " });
+        }
+
         #endregion
     }
 }
